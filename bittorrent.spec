@@ -1,4 +1,4 @@
-%define release 	%mkrel 3
+%define release 	%mkrel 4
 #fixed2
 %{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
 #gw for backports
@@ -10,7 +10,6 @@ Version: 5.0.7
 Release: %release
 Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.bz2
 Source5: bittorrent-bash-completion-20050712.bz2
-Patch: BitTorrent-5.0.5-wxpython2.8.patch
 Patch5: BitTorrent-4.20.6-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
 License: BitTorrent Open Source License
@@ -34,7 +33,7 @@ download, making the publisher's burden almost nothing.
 %package gui
 Summary: GUI versions of the BitTorrent file transfer tools
 Group: Networking/File transfer
-Requires: wxPythonGTK >= 1:2.8
+Requires: wxpython2.6
 Requires: %name = %version
 Conflicts: kdelibs-common <= 3.1.3
 Requires(post):desktop-file-utils
@@ -51,7 +50,6 @@ This package contains the graphical versions of the BitTorrent tools.
 
 %prep
 %setup -q -n BitTorrent-%version
-%patch -p1
 %patch5 -p1 -b .paths
 %patch6 -p1 -b .download
 
