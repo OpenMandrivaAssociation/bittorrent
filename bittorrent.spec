@@ -1,4 +1,4 @@
-%define release 	%mkrel 4
+%define release 	%mkrel 1
 #fixed2
 %{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
 #gw for backports
@@ -6,7 +6,7 @@
 
 Summary: BitTorrent is a tool for copying files from one machine to another
 Name: bittorrent
-Version: 5.0.7
+Version: 5.0.8
 Release: %release
 Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.bz2
 Source5: bittorrent-bash-completion-20050712.bz2
