@@ -75,7 +75,6 @@ EOF
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/applications/
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=BitTorrent
 Comment=Download files with BitTorrent
 Exec=%{_bindir}/%{name}
@@ -89,7 +88,6 @@ EOF
 
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}-maketorrent.desktop << EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=BitTorrent Creator
 Comment=Create BitTorrent metadata files
 Exec=%{_bindir}/maketorrent
