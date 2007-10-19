@@ -8,7 +8,7 @@ Summary: BitTorrent is a tool for copying files from one machine to another
 Name: bittorrent
 Version: 5.0.9
 Release: %release
-Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.bz2
+Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
 Source5: bittorrent-bash-completion-20050712.bz2
 Patch5: BitTorrent-4.20.6-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
