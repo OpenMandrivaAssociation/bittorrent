@@ -15,7 +15,6 @@ Patch6: bittorrent-5.0.7-default-download.patch
 License: BitTorrent Open Source License
 Group: Networking/File transfer
 URL: http://bittorrent.com/
-BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildArchitectures: noarch
 BuildRequires: python-devel
 BuildRequires: python-twisted-core
