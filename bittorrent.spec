@@ -66,11 +66,6 @@ ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_16.png  ${RPM_B
 ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_32.png  ${RPM_BUILD_ROOT}%{_iconsdir}/%{name}.png
 ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_48.png  ${RPM_BUILD_ROOT}%{_liconsdir}/%{name}.png
 
-mkdir -p $RPM_BUILD_ROOT%{_menudir}
-cat << EOF >  $RPM_BUILD_ROOT%{_menudir}/%{name}-gui
-?package(bittorrent-gui): needs="x11" section="Internet/File Transfer" command="bittorrent" mimetypes="application/x-bittorrent" accept_url="false" multiple_files="true" title="BitTorrent" longtitle="Download files with BitTorrent" icon="%name.png" xdg="true"
-?package(bittorrent-gui): needs="x11" section="Internet/File Transfer" command="maketorrent" title="BitTorrent Creator" longtitle="Create BitTorrent metadata files"  icon="%name.png" xdg="true"
-EOF
 
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/applications/
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
@@ -144,7 +139,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.txt
 %_bindir/bittorrent
 %_bindir/maketorrent
-%_menudir/*
 %_datadir/applications/mandriva*
 %_datadir/mime-info/*
 %_iconsdir/%{name}.png
