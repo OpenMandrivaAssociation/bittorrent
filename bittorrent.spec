@@ -4,7 +4,7 @@
 #gw for backports
 %{?!py_puresitedir:%define py_puresitedir %_libdir/python%pyver/site-packages}
 
-Summary: BitTorrent is a tool for copying files from one machine to another
+Summary: Tool for copying files from one machine to another
 Name: bittorrent
 Version: 5.2.0
 Release: %release
