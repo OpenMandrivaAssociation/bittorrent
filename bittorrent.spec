@@ -109,13 +109,17 @@ bzcat %SOURCE5 > %buildroot%_sysconfdir/bash_completion.d/bittorrent
 rm -rf $RPM_BUILD_ROOT
 
 
+%if %mdkversion < 200900
 %post gui
 %{update_menus}
 %update_desktop_database
+%endif
 
+%if %mdkversion < 200900
 %postun gui
 %{clean_menus}
 %clean_desktop_database
+%endif
 
 %files -f %name.lang
 %defattr(-,root,root)
