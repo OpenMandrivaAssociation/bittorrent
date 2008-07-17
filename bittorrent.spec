@@ -1,14 +1,16 @@
-%define release 	%mkrel 2
-#fixed2
-%{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
-#gw for backports
-%{?!py_puresitedir:%define py_puresitedir %_libdir/python%pyver/site-packages}
+%define release 	%mkrel 3
+%define bt_dir		       %{_localstatedir}/lib/bittorrent
+%define bt_datadir	       %{bt_dir}/data
+%define bt_statedir	       %{bt_dir}/state
 
 Summary: Tool for copying files from one machine to another
 Name: bittorrent
 Version: 5.2.0
 Release: %release
 Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
+#gw init scripts from Fedora
+Source1: btseed
+Source2: bttrack
 Source5: bittorrent-bash-completion-20050712.bz2
 Patch5: BitTorrent-4.20.6-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
@@ -21,6 +23,10 @@ BuildRequires: python-devel
 BuildRequires: python-twisted-core
 Requires: python
 Requires: python-twisted-web
+Requires(pre): rpm-helper
+Requires(post): rpm-helper
+Requires(preun): rpm-helper
+Requires(postun): rpm-helper
 
 
 %description
@@ -102,11 +108,70 @@ EOF
 mkdir -p %buildroot%_sysconfdir/bash_completion.d
 bzcat %SOURCE5 > %buildroot%_sysconfdir/bash_completion.d/bittorrent
 
+# Create options files for initscripts
+mkdir -p %buildroot%{_sysconfdir}/sysconfig/
+cat <<EOF >%buildroot%{_sysconfdir}/sysconfig/bittorrent
+SEEDDIR=%{bt_datadir}
+SEEDOPTS="--max_upload_rate 350 --display_interval 300"
+SEEDLOG=%{_localstatedir}/log/bittorrent/btseed.log
+TRACKPORT=6969
+TRACKDIR=%{bt_datadir}
+TRACKSTATEFILE=%{bt_statedir}/bttrack
+TRACKLOG=%{_localstatedir}/log/bittorrent/bttrack.log
+TRACKOPTS="--min_time_between_log_flushes 4.0 --show_names 1 --hupmonitor 1"
+EOF
+
+# Have the services' log files rotated
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d/
+cat <<EOF >%{buildroot}%{_sysconfdir}/logrotate.d/bittorrent
+%{_localstatedir}/log/bittorrent/btseed.log {
+					    notifempty
+					    missingok
+					    postrotate
+						/sbin/service btseed condrestart 2>/dev/null >/dev/null || :
+						endscript
+}
+
+%{_localstatedir}/log/bittorrent/bttrack.log {
+					     notifempty
+					     missingok
+					     postrotate
+						/sbin/service bttrack condrestart 2>/dev/null >/dev/null || :
+						endscript
+}
+EOF
+
+# pidof doesn't find scripts with hyphenated names, so make some convenience links for initscripts
+%{__ln_s} bittorrent-tracker %{buildroot}%{_bindir}/bttrack
+%{__ln_s} launchmany-console %{buildroot}%{_bindir}/btseed
+mkdir -p %{buildroot}%{bt_dir}
+mkdir -p %{buildroot}%{bt_datadir}
+mkdir -p %{buildroot}%{bt_statedir}
+mkdir -p %{buildroot}%{_localstatedir}/{run,log/bittorrent}
+
+install -D -m 755 %SOURCE1 %{buildroot}%{_sysconfdir}/rc.d/init.d/btseed
+install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/rc.d/init.d/bttrack
+
+
 %find_lang %name
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%pre
+%_pre_useradd torrent %{bt_dir} /sbin/nologin
+
+%post
+%_post_service btseed
+%_post_service bttrack
+
+%preun
+%_preun_service btseed
+%_preun_service bttrack
+
+%postun
+%_postun_userdel torrent
 
 
 %if %mdkversion < 200900
@@ -125,6 +190,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/bash_completion.d/*
 %doc %_datadir/doc/%name-%version
+%_bindir/btseed
+%_bindir/bttrack
 %_bindir/bittorrent-curses
 %_bindir/bittorrent-console
 %_bindir/maketorrent-console
@@ -137,6 +204,15 @@ rm -rf $RPM_BUILD_ROOT
 %py_puresitedir/BTL
 %py_puresitedir/khashmir
 %py_puresitedir/Zeroconf*
+%attr(-,torrent,torrent) %dir %{bt_dir}/
+%attr(-,torrent,torrent) %dir %{bt_datadir}/
+%attr(-,torrent,torrent) %dir %{bt_statedir}/
+%attr(-,torrent,torrent) %dir %{_localstatedir}/log/bittorrent/
+%{_sysconfdir}/rc.d/init.d/btseed
+%{_sysconfdir}/rc.d/init.d/bttrack
+%config(noreplace) %{_sysconfdir}/logrotate.d/bittorrent
+%config(noreplace) %{_sysconfdir}/sysconfig/bittorrent
+
 
 %files gui
 %defattr(-,root,root)
