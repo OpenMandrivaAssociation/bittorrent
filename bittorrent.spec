@@ -1,4 +1,7 @@
 %define release 	%mkrel 3
+%if %mdvver < 200900
+%define _localstatedir /var
+%endif
 %define bt_dir		       %{_localstatedir}/lib/bittorrent
 %define bt_datadir	       %{bt_dir}/data
 %define bt_statedir	       %{bt_dir}/state
@@ -113,18 +116,18 @@ mkdir -p %buildroot%{_sysconfdir}/sysconfig/
 cat <<EOF >%buildroot%{_sysconfdir}/sysconfig/bittorrent
 SEEDDIR=%{bt_datadir}
 SEEDOPTS="--max_upload_rate 350 --display_interval 300"
-SEEDLOG=%{_localstatedir}/log/bittorrent/btseed.log
+SEEDLOG=/var/log/bittorrent/btseed.log
 TRACKPORT=6969
 TRACKDIR=%{bt_datadir}
 TRACKSTATEFILE=%{bt_statedir}/bttrack
-TRACKLOG=%{_localstatedir}/log/bittorrent/bttrack.log
+TRACKLOG=/var/log/bittorrent/bttrack.log
 TRACKOPTS="--min_time_between_log_flushes 4.0 --show_names 1 --hupmonitor 1"
 EOF
 
 # Have the services' log files rotated
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d/
 cat <<EOF >%{buildroot}%{_sysconfdir}/logrotate.d/bittorrent
-%{_localstatedir}/log/bittorrent/btseed.log {
+/var/log/bittorrent/btseed.log {
 					    notifempty
 					    missingok
 					    postrotate
@@ -132,7 +135,7 @@ cat <<EOF >%{buildroot}%{_sysconfdir}/logrotate.d/bittorrent
 						endscript
 }
 
-%{_localstatedir}/log/bittorrent/bttrack.log {
+/var/log/bittorrent/bttrack.log {
 					     notifempty
 					     missingok
 					     postrotate
@@ -147,7 +150,7 @@ EOF
 mkdir -p %{buildroot}%{bt_dir}
 mkdir -p %{buildroot}%{bt_datadir}
 mkdir -p %{buildroot}%{bt_statedir}
-mkdir -p %{buildroot}%{_localstatedir}/{run,log/bittorrent}
+mkdir -p %{buildroot}{/var/{run,log},%_localstatedir/bittorrent}
 
 install -D -m 755 %SOURCE1 %{buildroot}%{_sysconfdir}/rc.d/init.d/btseed
 install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/rc.d/init.d/bttrack
@@ -207,7 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,torrent,torrent) %dir %{bt_dir}/
 %attr(-,torrent,torrent) %dir %{bt_datadir}/
 %attr(-,torrent,torrent) %dir %{bt_statedir}/
-%attr(-,torrent,torrent) %dir %{_localstatedir}/log/bittorrent/
+%attr(-,torrent,torrent) %dir /var/log/bittorrent/
 %{_sysconfdir}/rc.d/init.d/btseed
 %{_sysconfdir}/rc.d/init.d/bttrack
 %config(noreplace) %{_sysconfdir}/logrotate.d/bittorrent
