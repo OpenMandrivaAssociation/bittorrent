@@ -150,7 +150,7 @@ EOF
 mkdir -p %{buildroot}%{bt_dir}
 mkdir -p %{buildroot}%{bt_datadir}
 mkdir -p %{buildroot}%{bt_statedir}
-mkdir -p %{buildroot}{/var/{run,log/bittorrent}
+mkdir -p %{buildroot}/var/{run,log/bittorrent}
 
 install -D -m 755 %SOURCE1 %{buildroot}%{_sysconfdir}/rc.d/init.d/btseed
 install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/rc.d/init.d/bttrack
