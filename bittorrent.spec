@@ -1,4 +1,4 @@
-%define release 	%mkrel 3
+%define release 	%mkrel 1
 %if %mdvver < 200900
 %define _localstatedir /var
 %endif
@@ -8,7 +8,7 @@
 
 Summary: Tool for copying files from one machine to another
 Name: bittorrent
-Version: 5.2.0
+Version: 5.2.2
 Release: %release
 Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
 #gw init scripts from Fedora
