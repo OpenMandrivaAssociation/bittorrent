@@ -1,4 +1,4 @@
-%define release 	%mkrel 1
+%define release 	%mkrel 2
 %if %mdvver < 200900
 %define _localstatedir /var
 %endif
@@ -22,9 +22,8 @@ Group: Networking/File transfer
 URL: http://bittorrent.com/
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildArchitectures: noarch
-BuildRequires: python-devel
+%py_requires -d
 BuildRequires: python-twisted-core
-Requires: python
 Requires: python-twisted-web
 Requires(pre): rpm-helper
 Requires(post): rpm-helper
