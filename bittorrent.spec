@@ -15,7 +15,7 @@ Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
 Source1: btseed
 Source2: bttrack
 Source5: bittorrent-bash-completion-20050712.bz2
-Patch5: BitTorrent-4.20.6-paths.patch
+Patch5: BitTorrent-5.2.2-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
 License: BitTorrent Open Source License
 Group: Networking/File transfer
