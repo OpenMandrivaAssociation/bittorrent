@@ -1,4 +1,4 @@
-%define release 	%mkrel 2
+%define release 	%mkrel 3
 %if %mdvver < 200900
 %define _localstatedir /var
 %endif
@@ -38,24 +38,6 @@ done from one place, a popular site needs big iron and big
 bandwidth. With BitTorrent, clients automatically mirror files they
 download, making the publisher's burden almost nothing.
 
-%package gui
-Summary: GUI versions of the BitTorrent file transfer tools
-Group: Networking/File transfer
-Requires: wxpython2.6
-Requires: %name = %version
-Conflicts: kdelibs-common <= 3.1.3
-Requires(post):desktop-file-utils
-Requires(postun):desktop-file-utils
-
-%description gui
-BitTorrent is a tool for copying files from one machine to
-another. FTP punishes sites for being popular. Since all uploading is
-done from one place, a popular site needs big iron and big
-bandwidth. With BitTorrent, clients automatically mirror files they
-download, making the publisher's burden almost nothing.
-
-This package contains the graphical versions of the BitTorrent tools.
-
 %prep
 %setup -q -n BitTorrent-%version
 %patch5 -p1 -b .paths
@@ -67,45 +49,6 @@ python ./setup.py build
 %install
 rm -rf $RPM_BUILD_ROOT %name.lang
 python ./setup.py install --root=$RPM_BUILD_ROOT
-
-perl -p -i -e 's/env python2/env python/' $RPM_BUILD_ROOT%_bindir/*
-mkdir -p %buildroot%_liconsdir %buildroot%_miconsdir
-ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_16.png  ${RPM_BUILD_ROOT}%{_miconsdir}/%{name}.png
-ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_32.png  ${RPM_BUILD_ROOT}%{_iconsdir}/%{name}.png
-ln -s %_datadir/pixmaps/BitTorrent-%version/logo/bittorrent_icon_48.png  ${RPM_BUILD_ROOT}%{_liconsdir}/%{name}.png
-
-
-install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/applications/
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
-[Desktop Entry]
-Name=BitTorrent
-Comment=Download files with BitTorrent
-Exec=%{_bindir}/%{name}
-Icon=%{name}
-Terminal=false
-Type=Application
-StartupNotify=true
-MimeType=application/x-bittorrent
-Categories=GTK;X-MandrivaLinux-Internet-FileTransfer;Network;FileTransfer;P2P;
-EOF
-
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}-maketorrent.desktop << EOF
-[Desktop Entry]
-Name=BitTorrent Creator
-Comment=Create BitTorrent metadata files
-Exec=%{_bindir}/maketorrent
-Icon=%{name}
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=GTK;X-MandrivaLinux-Internet-FileTransfer;Network;FileTransfer;P2P;
-EOF
-
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/mime-info
-cat << EOF > $RPM_BUILD_ROOT%{_datadir}/mime-info/BitTorrent\ GUI.mime
-application/x-bittorrent
-	ext: torrent
-EOF
 
 mkdir -p %buildroot%_sysconfdir/bash_completion.d
 bzcat %SOURCE5 > %buildroot%_sysconfdir/bash_completion.d/bittorrent
@@ -154,6 +97,14 @@ mkdir -p %{buildroot}/var/{run,log/bittorrent}
 install -D -m 755 %SOURCE1 %{buildroot}%{_sysconfdir}/rc.d/init.d/btseed
 install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/rc.d/init.d/bttrack
 
+# AdamW 2008/12: bittorrent-gui doesn't work with wx 2.8 and has been
+# generally superseded by other clients, so we're not going to package
+# it any more. Transmission provides / obsoletes it. This deletes the
+# GUI-only files.
+
+rm -rf %{buildroot}%{_bindir}/bittorrent \
+	%{buildroot}%{_bindir}/maketorrent \
+	%{buildroot}%{_datadir}/pixmaps/BitTorrent-%{version}/
 
 %find_lang %name
 
@@ -214,19 +165,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rc.d/init.d/bttrack
 %config(noreplace) %{_sysconfdir}/logrotate.d/bittorrent
 %config(noreplace) %{_sysconfdir}/sysconfig/bittorrent
-
-
-%files gui
-%defattr(-,root,root)
-%doc README.txt
-%_bindir/bittorrent
-%_bindir/maketorrent
-%_datadir/applications/mandriva*
-%_datadir/mime-info/*
-%_iconsdir/%{name}.png
-%_miconsdir/%{name}.png
-%_liconsdir/%{name}.png
-%_datadir/pixmaps/BitTorrent-%version/
-
-
 
