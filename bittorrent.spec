@@ -1,4 +1,4 @@
-%define release 	%mkrel 3
+%define release 	%mkrel 4
 %if %mdvver < 200900
 %define _localstatedir /var
 %endif
@@ -14,7 +14,6 @@ Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
 #gw init scripts from Fedora
 Source1: btseed
 Source2: bttrack
-Source5: bittorrent-bash-completion-20050712.bz2
 Patch5: BitTorrent-5.2.2-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
 License: BitTorrent Open Source License
@@ -49,9 +48,6 @@ python ./setup.py build
 %install
 rm -rf $RPM_BUILD_ROOT %name.lang
 python ./setup.py install --root=$RPM_BUILD_ROOT
-
-mkdir -p %buildroot%_sysconfdir/bash_completion.d
-bzcat %SOURCE5 > %buildroot%_sysconfdir/bash_completion.d/bittorrent
 
 # Create options files for initscripts
 mkdir -p %buildroot%{_sysconfdir}/sysconfig/
@@ -141,7 +137,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %name.lang
 %defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/bash_completion.d/*
 %doc %_datadir/doc/%name-%version
 %_bindir/btseed
 %_bindir/bttrack
