@@ -8,15 +8,15 @@
 
 Summary: Tool for copying files from one machine to another
 Name: bittorrent
-Version: 5.2.2
+Version: 5.3
 Release: %release
-Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}.tar.gz
+Source0: http://download.bittorrent.com/dl/BitTorrent-%{version}-GPL.tar.gz
 #gw init scripts from Fedora
 Source1: btseed
 Source2: bttrack
 Patch5: BitTorrent-5.2.2-paths.patch
 Patch6: bittorrent-5.0.7-default-download.patch
-License: BitTorrent Open Source License
+License: GPLv3+
 Group: Networking/File transfer
 URL: http://bittorrent.com/
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -38,7 +38,11 @@ bandwidth. With BitTorrent, clients automatically mirror files they
 download, making the publisher's burden almost nothing.
 
 %prep
-%setup -q -n BitTorrent-%version
+%setup -q -n BitTorrent-%version-GPL
+tar xf BitTorrent_mainline_library_python.tar
+mv python_bt_codebase_library/* .
+tar xf BitTorrent_mainline_python.tar
+mv python_bt_codebase/* .
 %patch5 -p1 -b .paths
 %patch6 -p1 -b .download
 
@@ -100,7 +104,7 @@ install -D -m 755 %SOURCE2 %{buildroot}%{_sysconfdir}/rc.d/init.d/bttrack
 
 rm -rf %{buildroot}%{_bindir}/bittorrent \
 	%{buildroot}%{_bindir}/maketorrent \
-	%{buildroot}%{_datadir}/pixmaps/BitTorrent-%{version}/
+	%{buildroot}%{_datadir}/pixmaps/BitTorrent-5.2.2/
 
 %find_lang %name
 
@@ -137,7 +141,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %name.lang
 %defattr(-,root,root)
-%doc %_datadir/doc/%name-%version
+%doc %_datadir/doc/%name-5.2.2
 %_bindir/btseed
 %_bindir/bttrack
 %_bindir/bittorrent-curses
