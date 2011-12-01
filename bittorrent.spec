@@ -50,8 +50,8 @@ mv python_bt_codebase/* .
 python ./setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT %name.lang
-python ./setup.py install --root=$RPM_BUILD_ROOT
+rm -rf %{buildroot} %name.lang
+python ./setup.py install --root=%{buildroot}
 
 # Create options files for initscripts
 mkdir -p %buildroot%{_sysconfdir}/sysconfig/
@@ -110,7 +110,7 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %pre
 %_pre_useradd torrent %{bt_dir} /sbin/nologin
