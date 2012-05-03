@@ -1,4 +1,4 @@
-%define release 	%mkrel 8
+%define release 	%mkrel 9
 %if %mdvver < 200900
 %define _localstatedir /var
 %endif
