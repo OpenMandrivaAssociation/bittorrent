@@ -1,0 +1,11 @@
+--- BitTorrent-5.2.2/BitTorrent/platform.py.paths	2008-09-19 20:45:38.000000000 +0200
++++ BitTorrent-5.2.2/BitTorrent/platform.py	2008-12-25 16:59:56.000000000 +0100
+@@ -292,7 +292,7 @@
+ def calc_unix_dirs():
+     appdir = '%s-%s' % (app_name, version)
+     ip = os.path.join(efs2(u'share'), efs2(u'pixmaps'), appdir)
+-    dp = os.path.join(efs2(u'share'), efs2(u'doc'), appdir)
++    dp = os.path.join(efs2(u'share'), efs2(u'doc'), 'bittorrent-'+version)
+     lp = os.path.join(efs2(u'share'), efs2(u'locale'))
+     return ip, dp, lp
+ 

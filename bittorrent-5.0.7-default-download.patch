@@ -1,0 +1,19 @@
+--- BitTorrent-5.0.7/BitTorrent/platform.py	2007-03-02 01:12:50.000000000 +0000
++++ BitTorrent-5.0.7/BitTorrent/platform.py.new	2007-03-19 08:33:53.000000000 +0000
+@@ -528,15 +528,7 @@ def get_incomplete_data_dir():
+     return os.path.join(get_local_data_dir(), incomplete)
+ 
+ def get_save_dir():
+-    dirname = u'%s Downloads' % unicode(app_name)
+-    dirname = efs2(dirname)
+-    if os.name == 'nt':
+-        d = get_shell_dir(shellcon.CSIDL_PERSONAL)
+-        if d is None:
+-            d = desktop
+-    else:
+-        d = desktop
+-    return os.path.join(d, dirname)
++    return os.path.join(desktop)
+ 
+ def get_startup_dir():
+     """get directory where symlinks/shortcuts to be run at startup belong"""
