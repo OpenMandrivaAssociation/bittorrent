@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# chkconfig: 35 16 84
+# description: Start up tracker for BitTorrent 
+#
+### BEGIN INIT INFO
+# Provides: bttrack
+# Required-Start: $network
+# Required-Stop: $network
+# Default-Start: 3 5
+# Short-Description: Start up tracker for BitTorrent.
+# Description: Start up tracker for BitTorrent.
+#              See http://www.bittorrent.com/
+### END INIT INFO
+
+# processname: bttrack
+# config: /etc/sysconfig/bittorrent
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+# defaults
+TRACKPORT=6969
+TRACKSTATEFILE=/var/lib/bittorrent/state/bttrack
+TRACKOPTS=
+TRACKLOG=/var/log/bittorrent/bttrack.log
+# directory of torrents that the tracker is allowed to serve
+TRACKDIR="/var/lib/bittorrent/data"
+
+# source the config
+. /etc/sysconfig/bittorrent
+
+RETVAL=0
+prog="/usr/bin/bttrack"
+btuser="torrent"
+btgroup="torrent"
+
+case "$1" in
+  start)
+	echo -n $"Starting BitTorrent tracker: "
+	: > /var/run/bittorrent-tracker.pid
+	/bin/chown $btuser:$btgroup /var/run/bittorrent-tracker.pid
+	daemon --user $btuser $prog --port $TRACKPORT \
+		--dfile $TRACKSTATEFILE --logfile $TRACKLOG $TRACKOPTS \
+		--allowed_dir $TRACKDIR &> /dev/null &
+	disown -ar
+	usleep 500000
+	status bttrack &> /dev/null && echo_success || echo_failure
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/bttrack
+	echo
+	;;
+  stop)
+	echo -n $"Shutting down BitTorrent tracker: "
+	killproc $prog
+	#killproc "/usr/bin/python $prog"
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/bttrack
+	echo
+	;;
+  restart|reload)
+        $0 stop
+        $0 start
+	RETVAL=$?
+        ;;
+  condrestart)
+        if [ -f /var/lock/subsys/bttrack ]; then
+                $0 stop
+		$0 start
+        fi
+	RETVAL=$?
+        ;;
+  status)
+        status bttrack
+	RETVAL=$?
+        ;;
+  *)
+	echo $"Usage: $0 {start|stop|restart|reload|condrestart|status}"
+	exit 1
+esac
+
+exit $RETVAL

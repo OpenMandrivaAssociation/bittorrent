@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+# chkconfig: 35 16 84
+# description: Start up seed clients for BitTorrent 
+### BEGIN INIT INFO
+# Provides: btseed
+# Required-Start: $network
+# Required-Stop: $network
+# Default-Start: 3 5
+# Short-Description: Start up seed clients for BitTorrent.
+# Description: Start up seed clients for BitTorrent.
+#              See http://www.bittorrent.com/
+### END INIT INFO
+
+#
+# processname: btseed
+# config: /etc/sysconfig/bittorrent
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+#. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+# default directory for torrents to seed
+SEEDDIR=/var/lib/bittorrent/data
+
+# default log file
+SEEDLOG=/var/log/btseed.log
+
+# source the config
+. /etc/sysconfig/bittorrent
+
+RETVAL=0
+prog="/usr/bin/btseed"
+btuser="torrent"
+btgroup="torrent"
+
+case "$1" in
+  start)
+	echo -n $"Starting BitTorrent seed client: "
+	daemon --user $btuser $prog $SEEDOPTS $SEEDDIR  >> $SEEDLOG 2>&1 &
+	disown -ar
+	usleep 500000
+	status btseed &> /dev/null && echo_success || echo_failure
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/btseed
+	echo
+	;;
+  stop)
+	echo -n $"Shutting down BitTorrent seed client: "
+	killproc $prog
+	#killproc "/usr/bin/python $prog"
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/btseed
+	echo
+	;;
+  restart|reload)
+        $0 stop
+        $0 start
+	RETVAL=$?
+        ;;
+  condrestart)
+        if [ -f /var/lock/subsys/btseed ]; then
+                $0 stop
+		$0 start
+        fi
+	RETVAL=$?
+        ;;
+  status)
+        status btseed
+	RETVAL=$?
+        ;;
+  *)
+	echo $"Usage: $0 {start|stop|restart|reload|condrestart|status}"
+	exit 1
+esac
+
+exit $RETVAL
