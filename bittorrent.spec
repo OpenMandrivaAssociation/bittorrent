@@ -16,7 +16,7 @@ Source2:	bttrack
 Patch5:		BitTorrent-5.2.2-paths.patch
 Patch6:		bittorrent-5.0.7-default-download.patch
 BuildArch: noarch
-%py_requires -d
+BuildRequires: python-devel
 
 BuildRequires:	python-twisted-core
 Requires:	python-twisted-web
