@@ -16,10 +16,11 @@ Source2:	bttrack
 Patch5:		BitTorrent-5.2.2-paths.patch
 Patch6:		bittorrent-5.0.7-default-download.patch
 BuildArch: noarch
-BuildRequires: python-devel
-
-BuildRequires:	python-twisted-core
+Requires:	python(abi) = 2.7
 Requires:	python-twisted-web
+BuildRequires: python-devel
+BuildRequires:	python-twisted-core
+
 Requires(pre,post,preun,postun): rpm-helper
 
 %description
