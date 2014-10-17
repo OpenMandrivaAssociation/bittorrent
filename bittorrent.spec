@@ -18,7 +18,7 @@ Patch6:		bittorrent-5.0.7-default-download.patch
 BuildArch: noarch
 Requires:	python(abi) = 2.7
 Requires:	python-twisted-web
-BuildRequires: python-devel
+BuildRequires:	pkgconfig(python2)
 BuildRequires:	python-twisted-core
 
 Requires(pre,post,preun,postun): rpm-helper
@@ -40,11 +40,11 @@ mv python_bt_codebase/* .
 %patch6 -p1 -b .download
 
 %build
-python ./setup.py build
+python2 ./setup.py build
 
 %install
 rm -rf %{buildroot} %{name}.lang
-python ./setup.py install --root=%{buildroot}
+python2 ./setup.py install --root=%{buildroot}
 
 # Create options files for initscripts
 mkdir -p %buildroot%{_sysconfdir}/sysconfig/
@@ -139,4 +139,3 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 %{_sysconfdir}/rc.d/init.d/bttrack
 %config(noreplace) %{_sysconfdir}/logrotate.d/bittorrent
 %config(noreplace) %{_sysconfdir}/sysconfig/bittorrent
-
