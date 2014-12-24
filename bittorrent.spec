@@ -129,10 +129,10 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 %_bindir/changetracker-console
 %_bindir/torrentinfo-console
 %_bindir/bittorrent-tracker
-%py_puresitedir/BitTorrent*
-%py_puresitedir/BTL
-%py_puresitedir/khashmir
-%py_puresitedir/Zeroconf*
+%py2_puresitedir/BitTorrent*
+%py2_puresitedir/BTL
+%py2_puresitedir/khashmir
+%py2_puresitedir/Zeroconf*
 %attr(-,torrent,torrent) %dir %{bt_dir}/
 %attr(-,torrent,torrent) %dir %{bt_datadir}/
 %attr(-,torrent,torrent) %dir %{bt_statedir}/
