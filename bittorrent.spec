@@ -100,7 +100,7 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 	%{buildroot}%{_bindir}/maketorrent \
 	%{buildroot}%{_datadir}/pixmaps/BitTorrent-5.2.2/
 
-%find_lang %{name}
+#%%find_lang %{name}
 
 %pre
 %_pre_useradd torrent %{bt_dir} /sbin/nologin
@@ -116,7 +116,7 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 %postun
 %_postun_userdel torrent
 
-%files -f %{name}.lang
+%files #-f %{name}.lang
 %doc %_datadir/doc/%{name}-5.2.2
 %_bindir/btseed
 %_bindir/bttrack
