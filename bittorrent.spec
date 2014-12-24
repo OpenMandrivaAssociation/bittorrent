@@ -20,7 +20,7 @@ Requires:	python(abi) = 2.7
 Requires:	python-twisted-web
 BuildRequires:	pkgconfig(python2)
 BuildRequires:	python-twisted-core
-BuildRequires:	python3egg(zope.interface)
+BuildRequires:	pythonegg(zope.interface)
 
 Requires(pre,post,preun,postun): rpm-helper
 
