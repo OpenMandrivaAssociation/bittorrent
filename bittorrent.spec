@@ -116,7 +116,8 @@ rm -rf %{buildroot}%{_bindir}/bittorrent \
 %postun
 %_postun_userdel torrent
 
-%files #-f %{name}.lang
+%files 
+#-f %{name}.lang
 %doc %_datadir/doc/%{name}-5.2.2
 %_bindir/btseed
 %_bindir/bttrack
