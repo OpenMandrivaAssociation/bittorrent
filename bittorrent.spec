@@ -5,7 +5,7 @@
 Summary:	Tool for copying files from one machine to another
 Name:		bittorrent
 Version:	5.3
-Release:	18
+Release:	19
 Group:		Networking/File transfer
 License:	GPLv3+
 Url:		http://bittorrent.com/
