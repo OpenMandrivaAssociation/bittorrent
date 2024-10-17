@@ -8,7 +8,7 @@ Version:	5.3
 Release:	20
 Group:		Networking/File transfer
 License:	GPLv3+
-Url:		http://bittorrent.com/
+Url:		https://bittorrent.com/
 Source0:	http://download.bittorrent.com/dl/BitTorrent-%{version}-GPL.tar.gz
 #gw init scripts from Fedora
 Source1:	btseed
